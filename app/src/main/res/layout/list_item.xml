@@ -1,5 +1,6 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     card_view:cardBackgroundColor="@color/white"
     android:layout_width="match_parent"
@@ -27,22 +28,42 @@
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/ivTemp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/temp_logo"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/tvID" />
+
         <TextView
             android:id="@+id/tvTemperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:text="42C"
-            card_view:layout_constraintStart_toStartOf="parent"
+            android:textSize="48sp"
+            android:textColor="@color/black"
+            card_view:layout_constraintStart_toEndOf="@+id/ivTemp"
+            card_view:layout_constraintTop_toBottomOf="@+id/tvID" />
+
+        <ImageView
+            android:id="@+id/ivFlame"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="48dp"
+            android:src="@drawable/flame_logo"
+            card_view:layout_constraintStart_toEndOf="@+id/tvTemperature"
             card_view:layout_constraintTop_toBottomOf="@+id/tvID" />
 
         <TextView
             android:id="@+id/tvFireStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="48dp"
-            android:text="Tidak Terdeteksi"
-            card_view:layout_constraintStart_toStartOf="@id/tvTemperature"
+            android:text="Tidak\nTerdeteksi"
+            android:textSize="32sp"
+            android:textColor="@color/black"
+            card_view:layout_constraintStart_toEndOf="@+id/ivFlame"
             card_view:layout_constraintTop_toBottomOf="@+id/tvID" />
 
 
