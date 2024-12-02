@@ -63,21 +63,28 @@ class FireRepository(context: Context) {
             }
     }
 
-    suspend fun getSensorData(): List<DataFire> {
+    suspend fun getSensorData(deviceId: String): List<DataFire> {
         return try {
-            val querySnapshot = db.collection(Reference.COLLECTION_API).get().await()
-            querySnapshot.documents.map { documentSnapshot ->
-                val temp = documentSnapshot.getDouble(Reference.FIELD_TEMP) ?: 0.0
-                val hum = documentSnapshot.getDouble(Reference.FIELD_HUM) ?: 0.0
-                val gasLevel = documentSnapshot.getDouble(Reference.FIELD_GAS_LEVEL) ?: 0.0
-                val flameDetected = documentSnapshot.getBoolean(Reference.FIELD_FLAME_DETECTED)
+            val querySnapshot = db.collection(Reference.COLLECTION)
+                .document(deviceId)
+                .collection(Reference.DATA_ALAT)
+                .get()
+                .await()
 
-                DataFire(temp, hum, gasLevel, flameDetected)
+            querySnapshot.documents.map { documentSnapshot ->
+                DataFire(
+                    flameDetected = documentSnapshot.getString("FlameDetected"),
+                    hum = documentSnapshot.getDouble("Humidity"),
+                    mqValue = documentSnapshot.getString("MQValue"),
+                    temp = documentSnapshot.getDouble("Temperature"),
+                    timestamp = documentSnapshot.getString("timestamp")
+                )
             }
         } catch (e: Exception) {
             emptyList()
         }
     }
+
 
     companion object {
         @Volatile

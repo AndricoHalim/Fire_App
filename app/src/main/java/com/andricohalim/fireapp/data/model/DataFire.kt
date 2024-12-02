@@ -1,8 +1,9 @@
 package com.andricohalim.fireapp.data.model
 
 data class DataFire(
-    var temp: Number?,
+    var flameDetected: String?,
     var hum: Number?,
-    var gasLevel: Number?,
-    var flameDetected: Boolean?,
+    var mqValue: String?,
+    var temp: Number?,
+    var timestamp: String?
 )
