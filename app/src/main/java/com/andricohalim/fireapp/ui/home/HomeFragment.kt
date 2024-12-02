@@ -47,12 +47,12 @@ class HomeFragment : Fragment() {
         getDataHistory()
     }
 
-    private fun getDataHistory(){
-        viewModel.getDataHistory()
-        viewModel.dataHistory.observe(viewLifecycleOwner){result ->
-//            showLoading(false)
-            if (result.isEmpty()){
-//                binding.tvEmptyHistory.visibility = View.VISIBLE
+    private fun getDataHistory() {
+        val deviceId = "id001" // Ganti dengan ID perangkat sesuai kebutuhan
+        viewModel.getDataHistory(deviceId)
+        viewModel.dataHistory.observe(viewLifecycleOwner) { result ->
+            if (result.isEmpty()) {
+                // Tampilkan indikator data kosong
             } else {
                 adapter.updateData(result)
             }

@@ -15,9 +15,9 @@ class HomeViewModel(private val repository: FireRepository) : ViewModel(){
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    fun getDataHistory(){
+    fun getDataHistory(deviceId: String) {
         viewModelScope.launch {
-            val data = repository.getSensorData()
+            val data = repository.getSensorData(deviceId)
             _dataHistory.postValue(data)
         }
     }
