@@ -11,13 +11,14 @@ import com.andricohalim.fireapp.databinding.ListItemBinding
 
 class ListAdapter(private val dataHistory: ArrayList<DataFire>): RecyclerView.Adapter<com.andricohalim.fireapp.ui.adapter.ListAdapter.ListViewHolder>(){
     inner class ListViewHolder(private val binding: ListItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: DataFire){
+        fun bind(data: DataFire, deviceId: String) {
             binding.apply {
                 tvTemperature.text = "${data.temp}°C"
                 tvFireStatus.text = when (data.flameDetected) {
                     "Api Terdeteksi" -> "Terdeteksi"
                     else -> "Tidak\nTerdeteksi"
                 }
+                tvID.text = "Device ID: $deviceId" // Tambahkan TextView di layout untuk ID perangkat
             }
         }
     }
@@ -32,7 +33,8 @@ class ListAdapter(private val dataHistory: ArrayList<DataFire>): RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.bind(dataHistory[position])
+        val data = dataHistory[position]
+        holder.bind(data, data.deviceId) // Pastikan `DataFire` memiliki properti `deviceId`.
     }
 
     @SuppressLint("NotifyDataSetChanged")

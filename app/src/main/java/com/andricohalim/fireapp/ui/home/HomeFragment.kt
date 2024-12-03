@@ -48,18 +48,19 @@ class HomeFragment : Fragment() {
     }
 
     private fun getDataHistory() {
-        val deviceId = "id001"
-        viewModel.getDataHistory(deviceId)
+        viewModel.getAllLatestData()
         viewModel.dataHistory.observe(viewLifecycleOwner) { result ->
             if (result.isEmpty()) {
                 binding.tvNoData.visibility = View.VISIBLE
-                showLoading(false)
             } else {
+                binding.tvNoData.visibility = View.GONE
                 adapter.updateData(result)
-                showLoading(false)
             }
+            showLoading(false)
         }
     }
+
+
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
