@@ -13,8 +13,11 @@ class ListAdapter(private val dataHistory: ArrayList<DataFire>): RecyclerView.Ad
     inner class ListViewHolder(private val binding: ListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: DataFire){
             binding.apply {
-                tvTemperature.text = data.temp.toString()
-                tvFireStatus.text = data.flameDetected.toString()
+                tvTemperature.text = "${data.temp}°C"
+                tvFireStatus.text = when (data.flameDetected) {
+                    "Api Terdeteksi" -> "Terdeteksi"
+                    else -> "Tidak\nTerdeteksi"
+                }
             }
         }
     }
