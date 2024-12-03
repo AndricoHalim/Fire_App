@@ -6,5 +6,5 @@ data class DataFire(
     val mqValue: String?,
     val temp: Double?,
     val timestamp: String?,
-    val deviceId: String
+    val deviceId: String,
 )
