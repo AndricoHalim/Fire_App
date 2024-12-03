@@ -39,7 +39,7 @@ class HomeFragment : Fragment() {
             rvList.layoutManager = LinearLayoutManager(requireContext())
             rvList.setHasFixedSize(true)
         }
-//        showLoading(true)
+        showLoading(true)
     }
 
     override fun onResume() {
@@ -48,19 +48,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun getDataHistory() {
-        val deviceId = "id001" // Ganti dengan ID perangkat sesuai kebutuhan
+        val deviceId = "id001"
         viewModel.getDataHistory(deviceId)
         viewModel.dataHistory.observe(viewLifecycleOwner) { result ->
             if (result.isEmpty()) {
-                // Tampilkan indikator data kosong
+                binding.tvNoData.visibility = View.VISIBLE
+                showLoading(false)
             } else {
                 adapter.updateData(result)
+                showLoading(false)
             }
         }
     }
 
-//    private fun showLoading(isLoading: Boolean) {
-//        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-//    }
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
 
 }

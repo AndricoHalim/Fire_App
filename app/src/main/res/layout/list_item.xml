@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="42C"
-            android:textSize="48sp"
+            android:textSize="36sp"
             android:textColor="@color/black"
             card_view:layout_constraintStart_toEndOf="@+id/ivTemp"
             card_view:layout_constraintTop_toBottomOf="@+id/tvID" />
@@ -60,12 +60,32 @@
             android:id="@+id/tvFireStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:lines="2"
+            android:maxLines="2"
             android:text="Tidak\nTerdeteksi"
-            android:textSize="32sp"
             android:textColor="@color/black"
+            android:textSize="20sp"
+            card_view:layout_constraintBottom_toBottomOf="@+id/tvTemperature"
             card_view:layout_constraintStart_toEndOf="@+id/ivFlame"
             card_view:layout_constraintTop_toBottomOf="@+id/tvID" />
 
+        <Button
+            android:layout_width="100sp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/black"
+            android:text="Lokasi"
+            card_view:layout_constraintEnd_toEndOf="@+id/tvTemperature"
+            card_view:layout_constraintStart_toStartOf="@+id/tvTemperature"
+            card_view:layout_constraintTop_toBottomOf="@+id/tvTemperature" />
+
+        <Button
+            android:layout_width="100sp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/black"
+            android:text="Go"
+            card_view:layout_constraintEnd_toEndOf="@+id/tvFireStatus"
+            card_view:layout_constraintStart_toStartOf="@+id/tvFireStatus"
+            card_view:layout_constraintTop_toBottomOf="@+id/tvFireStatus" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
