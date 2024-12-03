@@ -63,27 +63,37 @@ class FireRepository(context: Context) {
             }
     }
 
-    suspend fun getSensorData(deviceId: String): List<DataFire> {
+    suspend fun getAllLatestSensorData(): List<DataFire> {
         return try {
-            val querySnapshot = db.collection(Reference.COLLECTION)
-                .document(deviceId)
-                .collection(Reference.DATA_ALAT)
-                .get()
-                .await()
+            val deviceSnapshots = db.collection(Reference.COLLECTION).get().await()
+            deviceSnapshots.documents.flatMap { deviceDoc ->
+                val deviceId = deviceDoc.id
+                println("Processing deviceId: $deviceId") // Debug log
+                val querySnapshot = db.collection(Reference.COLLECTION)
+                    .document(deviceId)
+                    .collection(Reference.DATA_ALAT)
+                    .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                    .limit(1)
+                    .get()
+                    .await()
 
-            querySnapshot.documents.map { documentSnapshot ->
-                DataFire(
-                    flameDetected = documentSnapshot.getString("FlameDetected"),
-                    hum = documentSnapshot.getDouble("Humidity"),
-                    mqValue = documentSnapshot.getString("MQValue"),
-                    temp = documentSnapshot.getDouble("Temperature"),
-                    timestamp = documentSnapshot.getString("timestamp")
-                )
+                querySnapshot.documents.map { documentSnapshot ->
+                    DataFire(
+                        flameDetected = documentSnapshot.getString("FlameDetected"),
+                        hum = documentSnapshot.getDouble("Humidity"),
+                        mqValue = documentSnapshot.getString("MQValue"),
+                        temp = documentSnapshot.getDouble("Temperature"),
+                        timestamp = documentSnapshot.getString("timestamp"),
+                        deviceId = deviceId
+                    )
+                }
             }
         } catch (e: Exception) {
+            println("Error: ${e.message}") // Debug log
             emptyList()
         }
     }
+
 
 
     companion object {
