@@ -16,7 +16,7 @@ class ListAdapter(private val dataHistory: ArrayList<DataFire>): RecyclerView.Ad
                 tvTemperature.text = "${data.temp}°C"
                 tvFireStatus.text = when (data.flameDetected) {
                     "Api Terdeteksi" -> "Terdeteksi"
-                    else -> "Tidak\nTerdeteksi"
+                    else -> "Aman\nTerkendali"
                 }
                 tvID.text = "Device ID: $deviceId" // Tambahkan TextView di layout untuk ID perangkat
             }
