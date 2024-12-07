@@ -63,37 +63,45 @@ class FireRepository(context: Context) {
             }
     }
 
-    suspend fun getAllLatestSensorData(): List<DataFire> {
-        return try {
-            val deviceSnapshots = db.collection(Reference.COLLECTION).get().await()
-            deviceSnapshots.documents.flatMap { deviceDoc ->
-                val deviceId = deviceDoc.id
-                println("Processing deviceId: $deviceId") // Debug log
-                val querySnapshot = db.collection(Reference.COLLECTION)
-                    .document(deviceId)
-                    .collection(Reference.DATA_ALAT)
-                    .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
-                    .limit(1)
-                    .get()
-                    .await()
+    fun listenToAllDevicesRealtime(onDataChanged: (List<DataFire>) -> Unit, onError: (Exception) -> Unit) {
+        db.collection(Reference.COLLECTION).addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                onError(error)
+                return@addSnapshotListener
+            }
 
-                querySnapshot.documents.map { documentSnapshot ->
-                    DataFire(
-                        flameDetected = documentSnapshot.getString("FlameDetected"),
-                        hum = documentSnapshot.getDouble("Humidity"),
-                        mqValue = documentSnapshot.getString("MQValue"),
-                        temp = documentSnapshot.getDouble("Temperature"),
-                        timestamp = documentSnapshot.getString("timestamp"),
-                        deviceId = deviceId
-                    )
+            if (snapshot != null && !snapshot.isEmpty) {
+                val allDevicesData = mutableListOf<DataFire>()
+                snapshot.documents.forEach { deviceDoc ->
+                    val deviceId = deviceDoc.id
+                    db.collection(Reference.COLLECTION)
+                        .document(deviceId)
+                        .collection(Reference.DATA_ALAT)
+                        .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                        .limit(1)
+                        .addSnapshotListener { querySnapshot, queryError ->
+                            if (queryError != null) {
+                                onError(queryError)
+                                return@addSnapshotListener
+                            }
+
+                            querySnapshot?.documents?.forEach { documentSnapshot ->
+                                val data = DataFire(
+                                    flameDetected = documentSnapshot.getString("FlameDetected"),
+                                    hum = documentSnapshot.getDouble("Humidity"),
+                                    mqValue = documentSnapshot.getString("MQValue"),
+                                    temp = documentSnapshot.getDouble("Temperature"),
+                                    timestamp = documentSnapshot.getString("timestamp"),
+                                    deviceId = deviceId
+                                )
+                                allDevicesData.add(data)
+                            }
+                            onDataChanged(allDevicesData)
+                        }
                 }
             }
-        } catch (e: Exception) {
-            println("Error: ${e.message}") // Debug log
-            emptyList()
         }
     }
-
 
 
     companion object {

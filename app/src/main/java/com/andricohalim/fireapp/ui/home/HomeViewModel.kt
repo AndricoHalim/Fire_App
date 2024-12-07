@@ -15,12 +15,18 @@ class HomeViewModel(private val repository: FireRepository) : ViewModel(){
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    fun getAllLatestData() {
-        viewModelScope.launch {
-            _loading.postValue(true)
-            val data = repository.getAllLatestSensorData()
-            _dataHistory.postValue(data)
-            _loading.postValue(false)
-        }
+    fun observeAllDevicesRealtime() {
+        repository.listenToAllDevicesRealtime(
+            onDataChanged = { data ->
+                _dataHistory.postValue(data)
+            },
+            onError = { error ->
+                println("Error in listener: ${error.message}")
+            }
+        )
     }
+
+
+
+
 }

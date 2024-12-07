@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.andricohalim.fireapp.data.ViewModelFactory
 import com.andricohalim.fireapp.data.model.DataFire
 import com.andricohalim.fireapp.databinding.FragmentHomeBinding
-import com.andricohalim.fireapp.ui.adapter.ListAdapter
+import com.andricohalim.fireapp.ui.adapter.FireAdapter
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -20,7 +20,7 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels {
         ViewModelFactory.getInstance(requireContext())
     }
-    private lateinit var adapter: ListAdapter
+    private lateinit var adapter: FireAdapter
     private val itemList = ArrayList<DataFire>()
 
     override fun onCreateView(
@@ -33,36 +33,31 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = ListAdapter(itemList)
+        adapter = FireAdapter(itemList)
         binding.apply {
             rvList.adapter = adapter
             rvList.layoutManager = LinearLayoutManager(requireContext())
             rvList.setHasFixedSize(true)
         }
-        showLoading(true)
+
+        observeRealTimeData()
     }
 
-    override fun onResume() {
-        super.onResume()
-        getDataHistory()
-    }
-
-    private fun getDataHistory() {
-        viewModel.getAllLatestData()
-        viewModel.dataHistory.observe(viewLifecycleOwner) { result ->
-            if (result.isEmpty()) {
+    private fun observeRealTimeData() {
+        viewModel.observeAllDevicesRealtime()
+        viewModel.dataHistory.observe(viewLifecycleOwner) { data ->
+            if (data.isEmpty()) {
                 binding.tvNoData.visibility = View.VISIBLE
             } else {
                 binding.tvNoData.visibility = View.GONE
-                adapter.updateData(result)
+                adapter.updateData(data)
             }
             showLoading(false)
         }
     }
 
-
-
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
+
 }
