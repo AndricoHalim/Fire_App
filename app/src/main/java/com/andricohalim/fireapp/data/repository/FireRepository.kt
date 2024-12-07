@@ -1,4 +1,5 @@
 import android.content.Context
+import android.util.Log
 import com.andricohalim.fireapp.data.model.DataFire
 import com.andricohalim.fireapp.data.model.User
 import com.google.firebase.auth.AuthResult
@@ -102,6 +103,35 @@ class FireRepository(context: Context) {
             }
         }
     }
+
+    fun getLocationForDevice(deviceId: String, onResult: (String?, Exception?) -> Unit) {
+        db.collection(Reference.COLLECTION)
+            .document(deviceId)
+            .collection(Reference.DATA_USER)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot.isEmpty) {
+                    onResult(null, Exception("No DataUser found for deviceId: $deviceId"))
+                    return@addOnSuccessListener
+                }
+
+                for (document in snapshot.documents) {
+                    // Ambil lokasi dari field "location"
+                    val location = document.getString("location")
+                    if (location != null) {
+                        Log.d("Firestore", "Location found: $location")  // Debugging log
+                        onResult(location, null)
+                        return@addOnSuccessListener
+                    }
+                }
+                onResult(null, Exception("Location not found"))
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error getting location: ${e.message}")  // Debugging log
+                onResult(null, e)
+            }
+    }
+
 
 
     companion object {

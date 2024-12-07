@@ -1,31 +1,31 @@
 package com.andricohalim.fireapp.ui.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.andricohalim.fireapp.R
 import com.andricohalim.fireapp.data.model.DataFire
 import com.andricohalim.fireapp.databinding.ListItemBinding
 
-class FireAdapter(private val dataHistory: ArrayList<DataFire>) : RecyclerView.Adapter<FireAdapter.ListViewHolder>() {
+class FireAdapter(private val dataHistory: ArrayList<DataFire>, private val onLocationClicked: (String) -> Unit) : RecyclerView.Adapter<FireAdapter.ListViewHolder>() {
 
     inner class ListViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(data: DataFire, deviceId: String) {
             binding.apply {
-                // Periksa kondisi api terdeteksi
                 if (data.flameDetected == "Api Terdeteksi") {
-                    // Hapus background drawable pada ConstraintLayout
                     constraintLayout.background = null
 
                     // Ganti warna latar belakang MaterialCardView menjadi merah
                     cardView.setCardBackgroundColor(Color.RED)
                 } else {
-                    // Kembalikan drawable background pada ConstraintLayout
                     constraintLayout.setBackgroundResource(R.drawable.background)
 
-                    // Ganti warna latar belakang MaterialCardView menjadi putih
                     cardView.setCardBackgroundColor(Color.WHITE)
                 }
 
@@ -36,6 +36,10 @@ class FireAdapter(private val dataHistory: ArrayList<DataFire>) : RecyclerView.A
                     else -> "Aman\nTerkendali"
                 }
                 tvID.text = "Device ID: $deviceId"
+
+                btnLocation.setOnClickListener {
+                    onLocationClicked(deviceId)
+                }
             }
         }
     }
@@ -54,14 +58,11 @@ class FireAdapter(private val dataHistory: ArrayList<DataFire>) : RecyclerView.A
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(newData: List<DataFire>) {
-        // Perbarui data yang ada atau tambahkan jika belum ada
         for (newItem in newData) {
             val index = dataHistory.indexOfFirst { it.deviceId == newItem.deviceId }
             if (index != -1) {
-                // Update existing item
                 dataHistory[index] = newItem
             } else {
-                // Add new item if not found
                 dataHistory.add(newItem)
             }
         }

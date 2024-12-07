@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.andricohalim.fireapp.data.model.DataFire
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val repository: FireRepository) : ViewModel(){
+class HomeViewModel(private val repository: FireRepository) : ViewModel() {
     private val _dataHistory = MutableLiveData<List<DataFire>>()
     val dataHistory: LiveData<List<DataFire>> get() = _dataHistory
 
@@ -26,7 +26,7 @@ class HomeViewModel(private val repository: FireRepository) : ViewModel(){
         )
     }
 
-
-
-
+    fun getLocationForDevice(deviceId: String, onResult: (String?, Exception?) -> Unit) {
+        repository.getLocationForDevice(deviceId, onResult)
+    }
 }

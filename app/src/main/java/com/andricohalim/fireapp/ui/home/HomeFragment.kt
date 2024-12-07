@@ -1,10 +1,14 @@
 package com.andricohalim.fireapp.ui.home
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -33,7 +37,22 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = FireAdapter(itemList)
+        adapter = FireAdapter(itemList) { deviceId ->
+            Log.d("HomeFragment", "Clicked deviceId: $deviceId")  // Debugging log
+            viewModel.getLocationForDevice(deviceId) { location, error ->
+                if (error != null) {
+                    // Tangani error jika ada
+                    Toast.makeText(context, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                } else {
+                    if (location != null) {
+                        Log.d("HomeFragment", "Opening Google Maps with location: $location")  // Debugging log
+                        openGoogleMaps(location)
+                    } else {
+                        Toast.makeText(context, "Location not found", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
         binding.apply {
             rvList.adapter = adapter
             rvList.layoutManager = LinearLayoutManager(requireContext())
@@ -60,4 +79,34 @@ class HomeFragment : Fragment() {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
+    // Fungsi untuk membuka Google Maps
+    private fun openGoogleMaps(location: String) {
+        val coordinates = location.split(",")
+
+        if (coordinates.size == 2) {
+            val latitude = coordinates[0].trim()
+            val longitude = coordinates[1].trim()
+
+            Log.d("Maps", "Opening Google Maps search with coordinates: $latitude, $longitude")
+
+            val uri = "https://www.google.com/maps/search/$latitude,$longitude"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+
+            intent.setPackage("com.google.android.apps.maps")
+
+            try {
+                startActivity(intent)
+            } catch (e: Exception) {
+                Log.e("Maps", "Error opening Google Maps: ${e.message}")
+                Toast.makeText(context, "Google Maps tidak terinstal", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Log.e("Maps", "Invalid location format: $location")
+            Toast.makeText(context, "Invalid location format", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+
 }
+
