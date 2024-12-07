@@ -9,6 +9,7 @@ import com.andricohalim.fireapp.R
 object Reference {
     const val COLLECTION = "Fire"
     const val DATA_ALAT = "DataAlat"
+    const val DATA_USER = "DataUser"
 
 //    fun isEmailValid(context: Context, email: String): Boolean {
 //        return if (TextUtils.isEmpty(email) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {

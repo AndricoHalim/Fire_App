@@ -1,8 +1,7 @@
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    card_view:cardBackgroundColor="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -13,18 +12,32 @@
     card_view:cardCornerRadius="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/background"
         android:padding="8dp">
 
         <TextView
             android:id="@+id/tvID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ID Alat"
-            android:textSize="14sp"
             android:layout_marginStart="8dp"
+            android:text="ID Alat"
+            android:textColor="@color/white"
+            android:textSize="14sp"
             android:textStyle="bold"
+            android:paddingBottom="8dp"
+            card_view:layout_constraintBottom_toTopOf="@+id/spacertop"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
+
+        <Space
+            android:id="@+id/spacertop"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginTop="16dp"
+            card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
 
@@ -32,29 +45,37 @@
             android:id="@+id/ivTemp"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:src="@drawable/temp_logo"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/tvID" />
+            card_view:layout_constraintTop_toBottomOf="@+id/spacertop" />
 
         <TextView
             android:id="@+id/tvTemperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="42C"
-            android:textSize="36sp"
             android:textColor="@color/black"
+            android:textSize="36sp"
             card_view:layout_constraintStart_toEndOf="@+id/ivTemp"
-            card_view:layout_constraintTop_toBottomOf="@+id/tvID" />
+            card_view:layout_constraintTop_toBottomOf="@+id/spacertop" />
+
+        <Space
+            android:id="@+id/spacer"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="48dp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintStart_toEndOf="@+id/tvTemperature"
+            card_view:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/ivFlame"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginStart="48dp"
             android:src="@drawable/flame_logo"
-            card_view:layout_constraintStart_toEndOf="@+id/tvTemperature"
-            card_view:layout_constraintTop_toBottomOf="@+id/tvID" />
+            card_view:layout_constraintStart_toEndOf="@+id/spacer"
+            card_view:layout_constraintTop_toBottomOf="@+id/spacertop" />
 
         <TextView
             android:id="@+id/tvFireStatus"
@@ -64,30 +85,33 @@
             android:maxLines="2"
             android:text="Tidak\nTerdeteksi"
             android:textColor="@color/black"
+            android:paddingEnd="8dp"
             android:textSize="20sp"
             card_view:layout_constraintBottom_toBottomOf="@+id/tvTemperature"
             card_view:layout_constraintStart_toEndOf="@+id/ivFlame"
-            card_view:layout_constraintTop_toBottomOf="@+id/tvID" />
+            card_view:layout_constraintTop_toBottomOf="@+id/spacertop" />
 
         <Button
             android:id="@+id/btnLocation"
-            android:layout_width="100sp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/black"
             android:text="Lokasi"
-            card_view:layout_constraintEnd_toEndOf="@+id/tvTemperature"
-            card_view:layout_constraintStart_toStartOf="@+id/tvTemperature"
+            android:layout_marginEnd="24dp"
+            card_view:layout_constraintEnd_toStartOf="@+id/button3"
+            card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/tvTemperature" />
 
         <Button
-            android:layout_width="100sp"
+            android:id="@+id/button3"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/black"
             android:text="Go"
-            card_view:layout_constraintEnd_toEndOf="@+id/tvFireStatus"
-            card_view:layout_constraintStart_toStartOf="@+id/tvFireStatus"
+            android:layout_marginEnd="16dp"
+            card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/tvFireStatus" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

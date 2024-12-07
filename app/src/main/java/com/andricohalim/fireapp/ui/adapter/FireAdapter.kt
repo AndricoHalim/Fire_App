@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.andricohalim.fireapp.R
 import com.andricohalim.fireapp.data.model.DataFire
 import com.andricohalim.fireapp.databinding.ListItemBinding
 
@@ -13,20 +14,28 @@ class FireAdapter(private val dataHistory: ArrayList<DataFire>) : RecyclerView.A
     inner class ListViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(data: DataFire, deviceId: String) {
             binding.apply {
+                // Periksa kondisi api terdeteksi
+                if (data.flameDetected == "Api Terdeteksi") {
+                    // Hapus background drawable pada ConstraintLayout
+                    constraintLayout.background = null
+
+                    // Ganti warna latar belakang MaterialCardView menjadi merah
+                    cardView.setCardBackgroundColor(Color.RED)
+                } else {
+                    // Kembalikan drawable background pada ConstraintLayout
+                    constraintLayout.setBackgroundResource(R.drawable.background)
+
+                    // Ganti warna latar belakang MaterialCardView menjadi putih
+                    cardView.setCardBackgroundColor(Color.WHITE)
+                }
+
+                // Tetapkan data lainnya
                 tvTemperature.text = "${data.temp}°C"
                 tvFireStatus.text = when (data.flameDetected) {
-                    "Api Terdeteksi" -> "Terdeteksi"
+                    "Api Terdeteksi" -> "Api\nTerdeteksi"
                     else -> "Aman\nTerkendali"
                 }
                 tvID.text = "Device ID: $deviceId"
-
-                // Ubah latar belakang menjadi merah jika api terdeteksi
-                val backgroundColor = if (data.flameDetected == "Api Terdeteksi") {
-                    Color.RED
-                } else {
-                    Color.WHITE
-                }
-                root.setBackgroundColor(backgroundColor)
             }
         }
     }
