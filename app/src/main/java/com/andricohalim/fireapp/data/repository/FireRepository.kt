@@ -92,7 +92,7 @@ class FireRepository(context: Context) {
                                     hum = documentSnapshot.getDouble("Humidity"),
                                     mqValue = documentSnapshot.getString("MQValue"),
                                     temp = documentSnapshot.getDouble("Temperature"),
-                                    timestamp = documentSnapshot.getString("timestamp"),
+                                    timestamp = documentSnapshot.getTimestamp("timestamp"),
                                     deviceId = deviceId
                                 )
                                 allDevicesData.add(data)

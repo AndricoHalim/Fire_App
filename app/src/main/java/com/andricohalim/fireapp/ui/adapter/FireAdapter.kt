@@ -19,14 +19,13 @@ class FireAdapter(private val dataHistory: ArrayList<DataFire>, private val onLo
         fun bind(data: DataFire, deviceId: String) {
             binding.apply {
                 if (data.flameDetected == "Api Terdeteksi") {
-                    constraintLayout.background = null
+                    constraintLayout.setBackgroundResource(R.drawable.background_red)
 
                     // Ganti warna latar belakang MaterialCardView menjadi merah
                     cardView.setCardBackgroundColor(Color.RED)
                 } else {
                     constraintLayout.setBackgroundResource(R.drawable.background)
 
-                    cardView.setCardBackgroundColor(Color.WHITE)
                 }
 
                 // Tetapkan data lainnya
