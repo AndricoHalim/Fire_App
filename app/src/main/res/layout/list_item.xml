@@ -1,5 +1,6 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
@@ -24,6 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="ID Alat"
+            android:textAllCaps="true"
+            android:fontFamily="@font/plus_jakarta_sans_bold"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -46,7 +49,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="16dp"
-            android:src="@drawable/temp_logo"
+            android:src="@drawable/temp_icon"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/spacertop" />
 
@@ -55,26 +58,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="42C"
+            android:fontFamily="@font/plus_jakarta_sans_semi_bold"
             android:textColor="@color/black"
-            android:textSize="36sp"
+            android:textSize="32sp"
             card_view:layout_constraintStart_toEndOf="@+id/ivTemp"
             card_view:layout_constraintTop_toBottomOf="@+id/spacertop" />
 
-        <Space
-            android:id="@+id/spacer"
-            android:layout_width="4dp"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineVertical"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="48dp"
-            card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintStart_toEndOf="@+id/tvTemperature"
-            card_view:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
 
         <ImageView
             android:id="@+id/ivFlame"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/flame_logo"
-            card_view:layout_constraintStart_toEndOf="@+id/spacer"
+            android:src="@drawable/flame_icon"
+            card_view:layout_constraintStart_toEndOf="@+id/guidelineVertical"
             card_view:layout_constraintTop_toBottomOf="@+id/spacertop" />
 
         <TextView
@@ -86,7 +91,8 @@
             android:text="Tidak\nTerdeteksi"
             android:textColor="@color/black"
             android:paddingEnd="8dp"
-            android:textSize="20sp"
+            android:textSize="22sp"
+            android:fontFamily="@font/plus_jakarta_sans_semi_bold"
             card_view:layout_constraintBottom_toBottomOf="@+id/tvTemperature"
             card_view:layout_constraintStart_toEndOf="@+id/ivFlame"
             card_view:layout_constraintTop_toBottomOf="@+id/spacertop" />
@@ -97,20 +103,33 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/black"
             android:text="Lokasi"
-            android:layout_marginEnd="24dp"
-            card_view:layout_constraintEnd_toStartOf="@+id/button3"
+            android:textSize="20sp"
+            android:fontFamily="@font/plus_jakarta_sans_semi_bold"
+            android:textAllCaps="false"
+            card_view:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/tvTemperature" />
+            card_view:layout_constraintTop_toBottomOf="@+id/guideline" />
 
         <Button
             android:id="@+id/button3"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+
             android:backgroundTint="@color/black"
+            android:fontFamily="@font/plus_jakarta_sans_semi_bold"
             android:text="Go"
-            android:layout_marginEnd="16dp"
+            android:textAllCaps="false"
+            android:textSize="20sp"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/tvFireStatus" />
+            card_view:layout_constraintStart_toStartOf="@+id/guidelineVertical"
+            card_view:layout_constraintTop_toBottomOf="@+id/guideline" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            card_view:layout_constraintGuide_begin="80dp" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

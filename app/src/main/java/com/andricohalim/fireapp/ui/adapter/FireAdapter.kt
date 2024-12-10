@@ -34,7 +34,7 @@ class FireAdapter(private val dataHistory: ArrayList<DataFire>, private val onLo
                     "Api Terdeteksi" -> "Api\nTerdeteksi"
                     else -> "Aman\nTerkendali"
                 }
-                tvID.text = "Device ID: $deviceId"
+                tvID.text = "$deviceId"
 
                 btnLocation.setOnClickListener {
                     onLocationClicked(deviceId)
