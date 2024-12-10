@@ -79,7 +79,6 @@ class HomeFragment : Fragment() {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    // Fungsi untuk membuka Google Maps
     private fun openGoogleMaps(location: String) {
         val coordinates = location.split(",")
 

@@ -1,4 +1,4 @@
-package com.andricohalim.fireapp
+package com.andricohalim.fireapp.util
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
