@@ -20,15 +20,10 @@ class FireAdapter(private val dataHistory: ArrayList<DataFire>, private val onLo
             binding.apply {
                 if (data.flameDetected == "Api Terdeteksi") {
                     constraintLayout.setBackgroundResource(R.drawable.background_red)
-
-                    // Ganti warna latar belakang MaterialCardView menjadi merah
-                    cardView.setCardBackgroundColor(Color.RED)
                 } else {
                     constraintLayout.setBackgroundResource(R.drawable.background)
-
                 }
 
-                // Tetapkan data lainnya
                 tvTemperature.text = "${data.temp}°C"
                 tvFireStatus.text = when (data.flameDetected) {
                     "Api Terdeteksi" -> "Api\nTerdeteksi"
@@ -66,14 +61,11 @@ class FireAdapter(private val dataHistory: ArrayList<DataFire>, private val onLo
             }
         }
 
-        // Periksa apakah ada api terdeteksi
         val hasFireDetected = dataHistory.any { it.flameDetected == "Api Terdeteksi" }
 
-        // Jika ada api terdeteksi, sort dengan item api terdeteksi di atas
         if (hasFireDetected) {
             dataHistory.sortByDescending { it.flameDetected == "Api Terdeteksi" }
         } else {
-            // Jika tidak ada api terdeteksi, sort berdasarkan deviceId
             dataHistory.sortBy { it.deviceId }
         }
 

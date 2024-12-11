@@ -116,10 +116,9 @@ class FireRepository(context: Context) {
                 }
 
                 for (document in snapshot.documents) {
-                    // Ambil lokasi dari field "location"
                     val location = document.getString("location")
                     if (location != null) {
-                        Log.d("Firestore", "Location found: $location")  // Debugging log
+                        Log.d("Firestore", "Location found: $location")
                         onResult(location, null)
                         return@addOnSuccessListener
                     }
@@ -127,7 +126,7 @@ class FireRepository(context: Context) {
                 onResult(null, Exception("Location not found"))
             }
             .addOnFailureListener { e ->
-                Log.e("Firestore", "Error getting location: ${e.message}")  // Debugging log
+                Log.e("Firestore", "Error getting location: ${e.message}")
                 onResult(null, e)
             }
     }
