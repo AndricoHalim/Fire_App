@@ -12,9 +12,6 @@ class ViewModelFactory(private val repository: FireRepository): ViewModelProvide
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T = when(modelClass){
 
-//        HomeViewModel::class.java -> HomeViewModel(repository)
-//        AuthViewModel::class.java -> AuthViewModel(repository)
-//        ProfileViewModel::class.java -> ProfileViewModel(repository)
         HomeViewModel::class.java -> HomeViewModel(repository)
 
         else ->  throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

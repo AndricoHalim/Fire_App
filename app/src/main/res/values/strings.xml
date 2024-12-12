@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">Fire App</string>
+    <string name="app_name">Pantauin Damkar</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_maps">Maps</string>
     <string name="title_notifications">Notifications</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
 </resources>
