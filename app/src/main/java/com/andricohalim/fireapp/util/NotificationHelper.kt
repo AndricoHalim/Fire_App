@@ -34,7 +34,7 @@ class NotificationHelper(private val context: Context) {
         }
     }
 
-    fun sendFireAlertNotification(title: String, message: String, deviceId: String) {
+    private fun sendFireAlertNotification(title: String, message: String, deviceId: String) {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 

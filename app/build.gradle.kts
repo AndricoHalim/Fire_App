@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.googleGmsGoogleServices)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -58,5 +59,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation (libs.androidx.cardview)
     implementation (libs.firebase.messaging)
-
+    implementation ("com.google.android.gms:play-services-maps:19.0.0")
+    implementation ("com.google.android.gms:play-services-location:21.3.0")
 }
