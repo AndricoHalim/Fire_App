@@ -1,13 +1,8 @@
 package com.andricohalim.fireapp.ui.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.andricohalim.fireapp.R
 import com.andricohalim.fireapp.data.model.DataFire

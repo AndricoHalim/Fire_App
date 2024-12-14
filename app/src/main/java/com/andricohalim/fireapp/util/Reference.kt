@@ -1,11 +1,5 @@
 package com.andricohalim.fireapp.util
 
-import android.content.Context
-import android.text.TextUtils
-import android.util.Patterns
-import android.widget.Toast
-import com.andricohalim.fireapp.R
-
 object Reference {
     const val COLLECTION = "Fire"
     const val DATA_ALAT = "DataAlat"

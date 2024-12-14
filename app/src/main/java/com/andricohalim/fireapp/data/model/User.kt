@@ -1,7 +1,7 @@
 package com.andricohalim.fireapp.data.model
 
 data class User(
-    val username: String,
-    val email: String,
-    val location: String
+    val email: String = "",
+    val password: String = "",
+    val username: String = ""
 )

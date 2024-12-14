@@ -2,34 +2,62 @@ package com.andricohalim.fireapp.ui.login
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.andricohalim.fireapp.MainActivity
-import com.andricohalim.fireapp.R
+import com.andricohalim.fireapp.data.ViewModelFactory
 import com.andricohalim.fireapp.databinding.ActivityLoginBinding
+import com.andricohalim.fireapp.ui.register.RegisterActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
 
-    private var _binding: ActivityLoginBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: ActivityLoginBinding
+    private val loginViewModel: LoginViewModel by viewModels {
+        ViewModelFactory.getInstance(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        _binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        if (isUserLoggedIn()) {
+            navigateToMainActivity()
+            return
         }
-        binding.apply {
-            btnLogin.setOnClickListener {
-                val loginIntent = Intent(this@LoginActivity, MainActivity::class.java)
-                startActivity(loginIntent)
+
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.btnLogin.setOnClickListener {
+            val email = binding.etEmail.text.toString()
+            val password = binding.etPassword.text.toString()
+            loginViewModel.loginUser(email, password)
+        }
+
+        binding.tvRegister.setOnClickListener {
+            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+            startActivity(intent)
+        }
+
+        loginViewModel.loginResult.observe(this) { (success, message) ->
+            if (success) {
+                Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
+                navigateToMainActivity()
+            } else {
+                Toast.makeText(this, "Error: $message", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun isUserLoggedIn(): Boolean {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        return currentUser != null
+    }
+
+    private fun navigateToMainActivity() {
+        val mainIntent = Intent(this@LoginActivity, MainActivity::class.java)
+        startActivity(mainIntent)
+        finish()
     }
 }

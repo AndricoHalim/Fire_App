@@ -1,14 +1,14 @@
+package com.andricohalim.fireapp.data.repository
+
 import android.content.Context
 import android.util.Log
 import com.andricohalim.fireapp.data.model.DataFire
 import com.andricohalim.fireapp.data.model.User
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.andricohalim.fireapp.util.Reference
-import kotlinx.coroutines.tasks.await
 
 class FireRepository(context: Context) {
     private val auth = FirebaseAuth.getInstance()
@@ -16,52 +16,74 @@ class FireRepository(context: Context) {
         Firebase.firestore
     }
 
-    fun getUser():String? = auth.uid
-
-    fun login(
-        email: String, password: String,
-        onSuccess: (AuthResult) -> Unit,
-        onFailure: (Exception) -> Unit
-    ) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener(onSuccess)
-            .addOnFailureListener(onFailure)
+    fun registerUser(user: User, onResult: (Boolean, String?) -> Unit) {
+        auth.createUserWithEmailAndPassword(user.email, user.password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
+                    val appInfo = mapOf("accountType" to "Pantauin Damkar")
+                    db.collection("Damkar").document(userId).set(
+                        mapOf(
+                            "email" to user.email,
+                            "password" to user.password,
+                            "username" to user.username,
+                            "accountType" to appInfo["accountType"]
+                        )
+                    ).addOnSuccessListener {
+                        onResult(true, null)
+                    }.addOnFailureListener { e ->
+                        onResult(false, e.message)
+                    }
+                } else {
+                    onResult(false, task.exception?.message)
+                }
+            }
     }
 
-    fun register(
-        user: User,
-        email: String,
-        password: String,
-        onResult: (Void?, Exception?) -> Unit,
-    ) {
-        auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
-            db.collection(Reference.COLLECTION).document(it.user!!.uid)
-                .set(user)
-                .addOnSuccessListener { documentReference ->
-                    onResult(documentReference, null)
+    fun loginUser(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
+                    val userDoc = db.collection("Damkar").document(userId)
+
+                    userDoc.get().addOnSuccessListener { documentSnapshot ->
+                        val accountType = documentSnapshot.getString("accountType")
+                        val currentAccount = "Pantauin Damkar"
+
+                        if (accountType != currentAccount) {
+                            onResult(false, "Akun Tidak Valid")
+                        } else {
+                            onResult(true, null)
+                        }
+                    }
+                } else {
+                    onResult(false, task.exception?.message)
                 }
-                .addOnFailureListener { e ->
-                    onResult(null, e)
+            }
+    }
+
+    fun isUserLoggedIn(): Boolean {
+        return FirebaseAuth.getInstance().currentUser != null
+    }
+
+    fun getUserByUID(uid: String, callback: (Result<Map<String, Any>>) -> Unit) {
+        val userDocRef = db.collection("Damkar").document(uid)
+        userDocRef.get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    callback(Result.success(documentSnapshot.data ?: emptyMap()))
+                } else {
+                    callback(Result.failure(Exception("Data Tidak Ditemukan")))
                 }
-        }.addOnFailureListener {
-            onResult(null, it)
-        }
+            }
+            .addOnFailureListener { exception ->
+                callback(Result.failure(exception))
+            }
     }
 
     fun logout() {
         auth.signOut()
-    }
-
-    fun getUserData(onResult: (User?, Exception?) -> Unit) {
-        db.collection(Reference.COLLECTION).document(auth.currentUser!!.uid)
-            .get()
-            .addOnSuccessListener { documentSnapshot ->
-                val user = documentSnapshot.toObject(User::class.java)
-                onResult(user, null)
-            }
-            .addOnFailureListener { e ->
-                onResult(null, e)
-            }
     }
 
     fun listenToAllDevicesRealtime(onDataChanged: (List<DataFire>) -> Unit, onError: (Exception) -> Unit) {
@@ -130,8 +152,6 @@ class FireRepository(context: Context) {
                 onResult(null, e)
             }
     }
-
-
 
     companion object {
         @Volatile

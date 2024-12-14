@@ -1,10 +1,10 @@
 package com.andricohalim.fireapp.ui.home
 
-import FireRepository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.andricohalim.fireapp.data.model.DataFire
+import com.andricohalim.fireapp.data.repository.FireRepository
 
 class HomeViewModel(private val repository: FireRepository) : ViewModel() {
     private val _dataHistory = MutableLiveData<List<DataFire>>()
