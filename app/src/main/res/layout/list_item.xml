@@ -99,30 +99,32 @@
 
         <Button
             android:id="@+id/btnLocation"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/black"
             android:text="Lokasi"
             android:textSize="20sp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
             android:fontFamily="@font/plus_jakarta_sans_semi_bold"
             android:textAllCaps="false"
             card_view:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/guideline" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
+<!--        <Button-->
+<!--            android:id="@+id/button3"-->
+<!--            android:layout_width="150dp"-->
+<!--            android:layout_height="wrap_content"-->
 
-            android:backgroundTint="@color/black"
-            android:fontFamily="@font/plus_jakarta_sans_semi_bold"
-            android:text="Go"
-            android:textAllCaps="false"
-            android:textSize="20sp"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintStart_toStartOf="@+id/guidelineVertical"
-            card_view:layout_constraintTop_toBottomOf="@+id/guideline" />
+<!--            android:backgroundTint="@color/black"-->
+<!--            android:fontFamily="@font/plus_jakarta_sans_semi_bold"-->
+<!--            android:text="Go"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:textSize="20sp"-->
+<!--            card_view:layout_constraintEnd_toEndOf="parent"-->
+<!--            card_view:layout_constraintStart_toStartOf="@+id/guidelineVertical"-->
+<!--            card_view:layout_constraintTop_toBottomOf="@+id/guideline" />-->
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"

@@ -59,6 +59,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation (libs.androidx.cardview)
     implementation (libs.firebase.messaging)
+    implementation (libs.androidx.swiperefreshlayout)
     implementation ("com.google.android.gms:play-services-maps:19.0.0")
     implementation ("com.google.android.gms:play-services-location:21.3.0")
 }

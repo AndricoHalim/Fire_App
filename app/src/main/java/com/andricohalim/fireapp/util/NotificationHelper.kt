@@ -40,6 +40,18 @@ class NotificationHelper(private val context: Context) {
 
         val soundUri = Uri.parse("android.resource://${context.packageName}/raw/alarm")
 
+        // Intent untuk membuka MainActivity saat notifikasi diklik
+        val mainIntent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val mainPendingIntent = PendingIntent.getActivity(
+            context,
+            0, // Request code (arbitrary, gunakan nilai unik jika Anda ingin membedakan intent)
+            mainIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        // Intent untuk menghentikan notifikasi
         val stopIntent = Intent(context, NotificationReceiver::class.java).apply {
             action = "STOP_NOTIFICATION"
         }
@@ -55,14 +67,15 @@ class NotificationHelper(private val context: Context) {
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(false)
+            .setAutoCancel(true)
             .setSound(soundUri)
             .setVibrate(longArrayOf(0, 1000, 500, 1000))
-            .addAction(android.R.drawable.ic_menu_close_clear_cancel, "OK", stopPendingIntent)
+            .setContentIntent(mainPendingIntent)
             .build()
 
         notificationManager.notify(deviceId.hashCode(), notification)
     }
+
 
     class NotificationReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
