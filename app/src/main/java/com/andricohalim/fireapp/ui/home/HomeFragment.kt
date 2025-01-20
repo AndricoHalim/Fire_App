@@ -1,6 +1,9 @@
 package com.andricohalim.fireapp.ui.home
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -54,21 +57,41 @@ class HomeFragment : Fragment() {
             rvList.adapter = adapter
             rvList.layoutManager = LinearLayoutManager(requireContext())
             rvList.setHasFixedSize(true)
+            swipeRefreshLayout.setOnRefreshListener {
+                observeRealTimeData()
+            }
         }
 
         observeRealTimeData()
     }
 
+    private fun isInternetAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+    }
+
     private fun observeRealTimeData() {
-        viewModel.observeAllDevicesRealtime()
-        viewModel.dataHistory.observe(viewLifecycleOwner) { data ->
-            if (data.isEmpty()) {
-                binding.tvNoData.visibility = View.VISIBLE
-            } else {
-                binding.tvNoData.visibility = View.GONE
-                adapter.updateData(data)
+        if (isInternetAvailable(requireContext())) {
+            showLoading(true)
+            viewModel.observeAllDevicesRealtime()
+            viewModel.dataHistory.observe(viewLifecycleOwner) { data ->
+                if (data.isEmpty()) {
+                    binding.tvNoData.visibility = View.VISIBLE
+                } else {
+                    binding.tvNoData.visibility = View.GONE
+                    adapter.updateData(data)
+                }
+                showLoading(false)
+                binding.swipeRefreshLayout.isRefreshing = false
             }
+        } else {
+            Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show()
+            binding.tvNoData.visibility = View.VISIBLE
             showLoading(false)
+            binding.swipeRefreshLayout.isRefreshing = false
         }
     }
 
@@ -101,8 +124,4 @@ class HomeFragment : Fragment() {
             Toast.makeText(context, "Invalid location format", Toast.LENGTH_SHORT).show()
         }
     }
-
-
-
 }
-

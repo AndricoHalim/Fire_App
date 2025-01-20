@@ -45,6 +45,8 @@ class RegisterActivity : AppCompatActivity() {
             val username = binding.etUsername.text.toString()
             val user = User(email = email, password = password, username = username)
 
+            binding.progressBar.visibility = android.view.View.VISIBLE
+
             registerViewModel.registerUser(user)
         }
         binding.tvLogin.setOnClickListener {

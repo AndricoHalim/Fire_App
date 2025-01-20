@@ -29,9 +29,13 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         binding.btnLogin.setOnClickListener {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
+
+            binding.progressBar.visibility = android.view.View.VISIBLE
+
             loginViewModel.loginUser(email, password)
         }
 
