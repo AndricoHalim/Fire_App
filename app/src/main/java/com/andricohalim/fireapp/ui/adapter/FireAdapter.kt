@@ -5,65 +5,41 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.andricohalim.fireapp.R
-import com.andricohalim.fireapp.data.model.DataFire
+import com.andricohalim.fireapp.data.response.FireResponse
+import com.andricohalim.fireapp.data.response.SensorDataItem
 import com.andricohalim.fireapp.databinding.ListItemBinding
 
-class FireAdapter(private val dataHistory: ArrayList<DataFire>, private val onLocationClicked: (String) -> Unit) : RecyclerView.Adapter<FireAdapter.ListViewHolder>() {
+class FireAdapter(private val listFire: List<SensorDataItem>) :
+    RecyclerView.Adapter<FireAdapter.ViewHolder>() {
 
-    inner class ListViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: DataFire, deviceId: String) {
-            binding.apply {
-                if (data.flameDetected == "Api Terdeteksi") {
-                    constraintLayout.setBackgroundResource(R.drawable.background_red)
-                } else {
-                    constraintLayout.setBackgroundResource(R.drawable.background)
-                }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(
+            ListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false))
+    }
 
-                tvTemperature.text = "${data.temp}°C"
-                tvFireStatus.text = when (data.flameDetected) {
-                    "Api Terdeteksi" -> "Api\nTerdeteksi"
-                    else -> "Aman\nTerkendali"
-                }
-                tvID.text = "$deviceId"
+    class ViewHolder(private var binding: ListItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun binding(data: SensorDataItem) {
+            binding.tvID.text = data.id.toString()
+            binding.tvFireStatus.text = data.flameStatus
+            binding.tvTemperature.text = data.temperature.toString()
 
-                btnLocation.setOnClickListener {
-                    onLocationClicked(deviceId)
-                }
-            }
+//            binding.root.setOnClickListener {
+//                val detailIntent = Intent(binding.root.context, DetailActivity::class.java)
+//                detailIntent.putExtra(DetailActivity.DETAIL_STORY, stories)
+//                itemView.context.startActivity(detailIntent, ActivityOptionsCompat.makeSceneTransitionAnimation(itemView.context as Activity).toBundle())
+//            }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-        val binding = ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ListViewHolder(binding)
+    override fun getItemCount(): Int {
+        return listFire.size
     }
 
-    override fun getItemCount(): Int = dataHistory.size
-
-    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        val data = dataHistory[position]
-        holder.bind(data, data.deviceId)
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateData(newData: List<DataFire>) {
-        for (newItem in newData) {
-            val index = dataHistory.indexOfFirst { it.deviceId == newItem.deviceId }
-            if (index != -1) {
-                dataHistory[index] = newItem
-            } else {
-                dataHistory.add(newItem)
-            }
-        }
-
-        val hasFireDetected = dataHistory.any { it.flameDetected == "Api Terdeteksi" }
-
-        if (hasFireDetected) {
-            dataHistory.sortByDescending { it.flameDetected == "Api Terdeteksi" }
-        } else {
-            dataHistory.sortBy { it.deviceId }
-        }
-
-        notifyDataSetChanged()
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.binding(listFire[position])
     }
 }

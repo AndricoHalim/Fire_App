@@ -5,4 +5,8 @@
     <string name="title_notifications">Notifications</string>
     <string name="home">Home</string>
     <string name="profile">Profile</string>
+    <string name="token_disimpan">Token Berhasil Disimpan</string>
+    <string name="sukses_login">Sukses Login</string>
+    <string name="login_berhasil">Login Berhasil</string>
+    <string name="lanjut">Lanjut</string>
 </resources>

@@ -89,6 +89,26 @@
             android:inputType="textPassword" />
     </com.andricohalim.fireapp.customview.CustomTextInputLayout>
 
+    <com.andricohalim.fireapp.customview.CustomTextInputLayout
+        android:id="@+id/tilLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:endIconMode="clear_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilPassword">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etLocation"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Location"
+            android:inputType="textPersonName" />
+    </com.andricohalim.fireapp.customview.CustomTextInputLayout>
+
     <Button
         android:id="@+id/btnRegister"
         android:layout_width="match_parent"
@@ -100,7 +120,7 @@
         android:text="Register"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/tilLocation" />
 
     <TextView
         android:id="@+id/tvConfirm"

@@ -1,70 +1,124 @@
 package com.andricohalim.fireapp.ui.register
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import com.andricohalim.fireapp.MainActivity
 import com.andricohalim.fireapp.R
+import com.andricohalim.fireapp.data.response.Result
 import com.andricohalim.fireapp.data.ViewModelFactory
-import com.andricohalim.fireapp.data.model.User
 import com.andricohalim.fireapp.databinding.ActivityRegisterBinding
 import com.andricohalim.fireapp.ui.login.LoginActivity
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
-    private val registerViewModel: RegisterViewModel by viewModels {
-        ViewModelFactory.getInstance(this)
+    private lateinit var progressBar: ProgressBar
+    private val registerViewModel by viewModels<RegisterViewModel> {
+        ViewModelFactory.getInstance(application)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        registerViewModel.checkUserLoginStatus()
-
-        registerViewModel.isUserLoggedIn.observe(this, Observer { isLoggedIn ->
-            if (isLoggedIn) {
-                navigateToMainActivity()
-            } else {
-                setContentView(R.layout.activity_register)
-                setupRegister()
-            }
-        })
-    }
-
-    private fun setupRegister() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnRegister.setOnClickListener {
-            val email = binding.etEmail.text.toString()
-            val password = binding.etPassword.text.toString()
-            val username = binding.etUsername.text.toString()
-            val user = User(email = email, password = password, username = username)
+        supportActionBar?.hide()
 
-            binding.progressBar.visibility = android.view.View.VISIBLE
+        progressBar = findViewById(R.id.progressBar)
 
-            registerViewModel.registerUser(user)
+        setupView()
+        setupAction()
+    }
+
+    private fun setupView() {
+        @Suppress("DEPRECATION")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
         }
-        binding.tvLogin.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-        }
-        registerViewModel.registerResult.observe(this) { (success, message) ->
-            if (success) {
-                navigateToMainActivity()
-            } else {
-                Toast.makeText(this, "$message", Toast.LENGTH_SHORT).show()
+        supportActionBar?.hide()
+    }
+
+    private fun registerUser(username: String, email: String, password: String, location: String) {
+        registerViewModel.registerUser(username, email, password, location).observe(this) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+
+                is Result.Success -> {
+                    setupAction()
+                    binding.progressBar.visibility = View.GONE
+
+//                    AlertDialog.Builder(this).apply {
+//                        setTitle(getString(R.string.akun_dibuat))
+//                        setMessage(
+//                            getString(
+//                                R.string.akun_dengan_berhasil_dibuat_login_sekarang,
+//                                email
+//                            ))
+//                        setPositiveButton(context.getString(R.string.lanjut)) { _, _ ->
+//                            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+//                            startActivity(intent)
+//                            finish()
+//                        }
+//                        show()
+//                    }
+                }
+
+                is Result.Error -> {
+                    progressBar.visibility = View.GONE
+//                    AlertDialog.Builder(this).apply {
+//                        setTitle(context.getString(R.string.error))
+//                        setMessage(result.error)
+//                        setPositiveButton(context.getString(R.string.ok)) { p0, _ ->
+//                            p0.dismiss()
+//                        }
+//                    }.create().show()
+                }
             }
         }
     }
 
-    private fun navigateToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+    private fun setupAction() {
+        binding.tvLogin.setOnClickListener {
+            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnRegister.setOnClickListener {
+
+            val name = binding.etUsername.text.toString()
+            val email = binding.etEmail.text.toString()
+            val password = binding.etPassword.text.toString()
+            val location = binding.etLocation.text.toString()
+
+            registerUser(name, email, password, location)
+        }
+
+        binding.etUsername.addTextChangedListener {
+            binding.etUsername.error = null
+        }
+        binding.etEmail.addTextChangedListener {
+            binding.etEmail.error = null
+        }
+        binding.etPassword.addTextChangedListener {
+            binding.etPassword.error = null
+        }
     }
+
 }
