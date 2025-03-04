@@ -17,29 +17,35 @@ class FireAdapter(private val listFire: List<SensorDataItem>) :
             ListItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false))
+                false
+            )
+        )
     }
 
-    class ViewHolder(private var binding: ListItemBinding) :
+    inner class ViewHolder(private var binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun binding(data: SensorDataItem) {
-            binding.tvID.text = data.id.toString()
-            binding.tvFireStatus.text = data.flameStatus
-            binding.tvTemperature.text = data.temperature.toString()
+        fun bind(data: SensorDataItem) {
+            binding.apply {
+                // 🔥 Mengubah background jika api terdeteksi
+                if (data.flameStatus == "Api Terdeteksi") {
+                    constraintLayout.setBackgroundResource(R.drawable.background_red)
+                } else {
+                    constraintLayout.setBackgroundResource(R.drawable.background)
+                }
 
-//            binding.root.setOnClickListener {
-//                val detailIntent = Intent(binding.root.context, DetailActivity::class.java)
-//                detailIntent.putExtra(DetailActivity.DETAIL_STORY, stories)
-//                itemView.context.startActivity(detailIntent, ActivityOptionsCompat.makeSceneTransitionAnimation(itemView.context as Activity).toBundle())
-//            }
+                tvTemperature.text = "${data.temperature}°C"
+                tvFireStatus.text = when (data.flameStatus) {
+                    "Api Terdeteksi" -> "Api\nTerdeteksi"
+                    else -> "Aman\nTerkendali"
+                }
+                tvID.text = data.id.toString()
+            }
         }
     }
 
-    override fun getItemCount(): Int {
-        return listFire.size
-    }
+    override fun getItemCount(): Int = listFire.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding(listFire[position])
+        holder.bind(listFire[position])
     }
 }

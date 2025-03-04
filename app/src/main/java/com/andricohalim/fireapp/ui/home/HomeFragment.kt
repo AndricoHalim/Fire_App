@@ -97,14 +97,14 @@ class HomeFragment : Fragment() {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    private fun updateList(story: List<SensorDataItem>?) {
+    private fun updateList(data: List<SensorDataItem>?) {
         binding.apply {
-            if (!story.isNullOrEmpty()) {
-                val adapter = FireAdapter(story)
-                binding.rvList.adapter = adapter
+            if (!data.isNullOrEmpty()) {
+                adapter = FireAdapter(data)
+                rvList.adapter = adapter
             } else {
-                binding.rvList.adapter = null
-                binding.tvNoData.visibility = View.VISIBLE
+                rvList.adapter = null
+                tvNoData.visibility = View.VISIBLE
             }
         }
     }
